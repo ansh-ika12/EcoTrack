@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* 🌿 Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 🌍 Body */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #c1ff72;
+        }
+
+        /* 🌿 Navbar */
+        .navbar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            align-items: center;
+            padding: 10px 30px;
+        }
+
+        .nav-left { justify-self: start; }
+        .nav-center { justify-self: center; }
+        .nav-right { justify-self: end; }
+
+        /* Logo */
+        .logo-img {
+            height: 120px;
+            object-fit: contain;
+        }
+
+        /* Right link */
+        .nav-right a {
+            text-decoration: none;
+            color: #1b5e20;
+            font-weight: 500;
+            cursor: pointer;
+            letter-spacing: 2px;
+        }
+
+        /* 🌍 Shared Headings */
+        h1, h2 {
+            font-family: 'Sacramento', cursive;
+            color: #af7a1f;
+        }
+
+        /* 🌍 Hero Section */
+        .hero {
+            text-align: center;
+            margin-top: 30px;
+            padding: 10px;
+        }
+
+        .hero h1 {
+            font-size: 90px;
+            margin-bottom: 20px;
+        }
+
+        /* 🌿 Text */
+        p, span, li {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            color: #33691e;
+        }
+
+        .hero p {
+            margin-top: -20px;
+            margin-bottom: 30px;
+        }
+
+        /* 🌱 Button */
+        .start-btn, .calculate-btn, .action-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            background-color: #33691e;
+            color: #c1ff72;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .start-btn:hover, .calculate-btn:hover, .action-btn:hover {
+            background-color: #af7a1f;
+            transform: scale(1.05);
+        }
+
+        /* 🔲 Popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .popup-content {
+            background: #c1ff72;
+            width: 450px;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 10% auto;
+            text-align: center;
+        }
+
+        .popup-content h2 {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .popup-content p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* 🧮 Calculator, Results, Compensate */
+        .calculator, .results, .compensate {
+            display: none; /* This ensures they stay hidden until triggered */
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .calculator h1, .results h1, .compensate h1 {
+            font-size: 80px;
+        }
+
+        .container {
+            background: #d9ff9c;
+            width: 500px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 40px;
+        }
+
+        .counter {
+            display: flex;
+            gap: 10px;
+        }
+
+        .counter button {
+            width: 30px;
+            height: 30px;
+            background: #33691e;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Compensation List */
+        .comp-list {
+            text-align: left;
+            margin: 10px 10px;
+            line-height: 1.8;
+            list-style: none;
+        }
+
+        .comp-list li {
+            margin-bottom: 0px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="logo.png.png" class="logo-img">
+        </div>
+        <div class="nav-center"></div>
+        <div class="nav-right">
+            <a id="howLink" onclick="openPopup()">How it works?</a>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <h1>Track Your Plastic Footprint!</h1>
+        <p>Discover how much plastic you use and learn how to reduce your impact.</p>
+        <button class="start-btn" onclick="showCalculator()">Start Tracking</button>
+    </section>
+
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <h2>How EcoTrack Works</h2>
+            <p>
+                EcoTrack is a simple tool designed to help you monitor your daily plastic consumption. 
+                By logging your usage, we calculate your environmental footprint in grams and provide 
+                curated methods to restore the balance of our natural ecosystem.
+            </p>
+            <button class="start-btn" style="margin-top:20px" onclick="closePopup()">Close</button>
+        </div>
+    </div>
+
+    <section class="calculator" id="calculator">
+        <h1>Plastic Input Calculator</h1>
+        <div class="container">
+            <div class="row"><span>Bottles</span><div class="counter"><button onclick="change('b',-1)">-</button><span id="b">0</span><button onclick="change('b',1)">+</button></div></div>
+            <div class="row"><span>Bags</span><div class="counter"><button onclick="change('bag',-1)">-</button><span id="bag">0</span><button onclick="change('bag',1)">+</button></div></div>
+            <div class="row"><span>Packaging</span><div class="counter"><button onclick="change('p',-1)">-</button><span id="p">0</span><button onclick="change('p',1)">+</button></div></div>
+            <div class="row"><span>Other</span><div class="counter"><button onclick="change('o',-1)">-</button><span id="o">0</span><button onclick="change('o',1)">+</button></div></div>
+            <button class="calculate-btn" onclick="calculateResults()">Calculate Impact</button>
+        </div>
+    </section>
+
+    <section class="results" id="results">
+        <h1>Your Plastic Impact</h1>
+        <div class="container">
+            <p>You have used <strong id="gramValue" style="color:#af7a1f">0</strong> grams of plastic today.</p>
+            <p id="resultMsg" style="margin-bottom: 25px; font-weight: 500;"></p>
+            <button class="action-btn" onclick="showCompensate()">Reduce Your Impact</button>
+        </div>
+    </section>
+
+    <section class="compensate" id="compensate">
+        <h1>This is how you can compensate!</h1>
+        <p>Let’s restore the balance to nature together.</p>
+        <div class="container">
+            <ul class="comp-list" id="compSuggestions"></ul>
+            <button class="action-btn" onclick="location.reload()">Go to Home</button>
+        </div>
+    </section>
+
+    <script>
+        let totalGrams = 0;
+
+        function openPopup() { document.getElementById("popup").style.display = "block"; }
+        function closePopup() { document.getElementById("popup").style.display = "none"; }
+
+        function showCalculator() {
+            document.getElementById("home").style.display = "none";
+            document.getElementById("calculator").style.display = "block";
+            document.getElementById("howLink").style.display = "none";
+        }
+
+        function change(id, val) {
+            let el = document.getElementById(id);
+            let num = parseInt(el.innerText);
+            num = Math.max(0, num + val);
+            el.innerText = num;
+        }
+
+        function calculateResults() {
+            let b = parseInt(document.getElementById('b').innerText) * 25;
+            let bag = parseInt(document.getElementById('bag').innerText) * 5;
+            let p = parseInt(document.getElementById('p').innerText) * 15;
+            let o = parseInt(document.getElementById('o').innerText) * 10;
+
+            totalGrams = b + bag + p + o;
+            document.getElementById('gramValue').innerText = totalGrams;
+
+            let msg = "";
+            if (totalGrams < 30) msg = "Excellent progress! You are a true guardian of the Earth.";
+            else if (totalGrams < 100) msg = "Moderate usage detected. Every small change helps our planet.";
+            else msg = "That's pretty bad! Wanna know how to reduce your impact?";
+
+            document.getElementById('resultMsg').innerText = msg;
+            document.getElementById('calculator').style.display = "none";
+            document.getElementById('results').style.display = "block";
+        }
+
+        function showCompensate() {
+            document.getElementById('results').style.display = "none";
+            document.getElementById('compensate').style.display = "block";
+
+            let list = document.getElementById('compSuggestions');
+            list.innerHTML = "";
+
+            if (totalGrams < 30) {
+                list.innerHTML = `<li>🌿 Switch to a reusable bamboo toothbrush.</li>
+                                  <li>🌿 Carry a refillable glass water bottle.</li>
+                                  <li>🌿 Plant a small herb garden to boost local oxygen.</li>`;
+            }
+            else if (totalGrams < 100) {
+                list.innerHTML = `<li>🌱 Plant one tree every 3 weeks to offset waste.</li>
+                                  <li>🌱 Always carry cloth tote bags for shopping.</li>
+                                  <li>🌱 Switch to stainless steel lunch boxes.</li>
+                                  <li>🌱 Start a composting bin at home for organic waste.</li>`;
+            }
+            else {
+                list.innerHTML = `<li>🌳 Volunteer for a local community clean-up drive.</li>
+                                  <li>🌳 Plant a sapling immediately to help nature heal.</li>
+                                  <li>🌳 Commit to a "Zero Plastic" week starting tomorrow.</li>
+                                  <li>🌳 Swap all plastic bottled soaps for shampoo bars.</li>
+                                  <li>🌳 Educate your friends and family about the plastic crisis.</li>`;
+            }
+        }
+    </script>
+
+</body>
+</html>
