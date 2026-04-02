@@ -34,3 +34,10 @@ EcoTrack/
 1. Clone the repository:
    ```bash
    git clone https://github.com/ansh-ika12/EcoTrack.git
+
+## 💡 Note
+
+If you like this project, please give it a ⭐ on GitHub!
+
+## P.S 
+This is my Level 1 frontend project. I will be extending it by adding a backend and aim to develop it further into a more advanced application, possibly even a mobile app.
